@@ -47,6 +47,9 @@ const App = () => {
     .then((re)=>{
       setIsSignedIn(false)
       Alert.alert("Signout successfully")
+      setSignInEmail('')
+      setSignInPassword('')
+
     })
     .catch((err)=>{
       console.log(err)
@@ -94,6 +97,8 @@ const App = () => {
         <Button title="sign in" onPress={signInUser} />
         }
       </View>
+      <View style={styles.thirdview} >
+      </View>
     </View>
   );
 };
@@ -102,10 +107,14 @@ export default App;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 30,
+    padding: 20,
     flex: 1,
   },
   underview: {
-    marginVertical: 50,
+    marginVertical: 25,
   },
+  thirdview:{
+    backgroundColor:"cyan",
+    flex:1
+  }
 });
