@@ -1,6 +1,5 @@
 import {StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native';
 import React, {useState} from 'react';
-
 import {authentication} from './Firebase/firebase-config';
 import {
   getAuth,
@@ -87,6 +86,8 @@ const App = () => {
       city_name: cityName,
       state: stateName,
     });
+    
+
   }
 
   return (
