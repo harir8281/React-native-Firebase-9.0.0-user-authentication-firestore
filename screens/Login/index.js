@@ -10,7 +10,6 @@ import {
 import React, {useState} from 'react';
 import {authentication} from '../../Firebase/firebase-config';
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
@@ -53,7 +52,7 @@ const Login = () => {
   }
 
   return (
-    <View style={styles.centeredView}>
+    <View style={styles.container}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -110,9 +109,15 @@ const Login = () => {
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    backgroundColor: 'pink',
+  container: {
+    backgroundColor: '#ff69b4',
     padding: 35,
+    justifyContent: 'center',
+    borderRadius:30
+  },
+  centeredView: {
+    backgroundColor: 'black',
+    padding: 30,
     justifyContent: 'center',
     borderRadius:30
   },

@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Aladin-Regular.ttf",
+      "sha1": "d69563b0933fa0b721b1e2726dec6c187891182b"
+    },
+    {
+      "path": "assets/fonts/TitanOne-Regular.ttf",
+      "sha1": "b2da1d8c562dc934c5b6377eb385263362179877"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View,StatusBar} from 'react-native';
 import React from 'react';
 import Login from './screens/Login';
 
@@ -6,6 +6,7 @@ import Signup from './screens/Signup';
 const App = () => {
   return (
     <>
+    <StatusBar hidden />
       <View style={styles.container}>
         <Signup />
         <View style={styles.titleView}>
@@ -22,18 +23,18 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding:20,
+    padding:30,
+    backgroundColor:"black"
   },
   titleView:{
     flex:1,
-    padding:10,
-    backgroundColor:"white",
+    backgroundColor:"black",
     justifyContent:"space-evenly"
   },
   title:{
     textAlign:"center",
     fontSize:20,
-    color:"red",
-    fontWeight:"bold"
+    color:"white",
+    fontFamily:"TitanOne-Regular"
   }
 });
