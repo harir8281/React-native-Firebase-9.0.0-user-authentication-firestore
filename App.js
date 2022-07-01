@@ -1,12 +1,13 @@
-import {StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native';
-import React, {useState} from 'react';
-import {authentication} from './Firebase/firebase-config';
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth';
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+} from 'react-native';
+import React, {useState, useEffect} from 'react';
 
 import {
   getFirestore,
@@ -19,158 +20,147 @@ import {
 import {db} from './Firebase/firebase-config';
 
 const App = () => {
-  //user authentication code
-  // const [isSignedIn, setIsSignedIn] = useState(false);
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-
-  // const [signInEmail, setSignInEmail] = useState('');
-  // const [signInPassword, setSignInPassword] = useState('');
-
-  //usestate for firestore
   const [cityName, setCityName] = useState('');
   const [stateName, setStateName] = useState('');
   const [email, setEmail] = useState('');
+  const [userDetails, setUserDetails] = useState({});
 
-  // function registerUser() {
-  //   createUserWithEmailAndPassword(authentication, email, password)
-  //     .then(re => {
-  //       console.log(re);
-  //       setIsSignedIn(true);
-  //       Alert.alert("user registered")
-  //     })
-  //     .catch(re => {
-  //       console.log(re);
-  //     });
-  // }
-
-  // function signInUser() {
-  //   signInWithEmailAndPassword(authentication,signInEmail,signInPassword)
-  //   .then((re)=>{
-  //     setIsSignedIn(true)
-  //     Alert.alert("signin successfully")
-  //   })
-  //   .catch((re)=>{
-  //     console.log(re)
-  //     Alert.alert("username or password incorrect")
-  //   })
-  // }
-
-  // function signOutUser()
-  // {
-  //   signOut(authentication)
-  //   .then((re)=>{
-  //     setIsSignedIn(false)
-  //     Alert.alert("Signout successfully")
-  //     setSignInEmail('')
-  //     setSignInPassword('')
-
-  //   })
-  //   .catch((err)=>{
-  //     console.log(err)
-  //   })
-  // }
-
-  //firstore code
-
-  async function getData() {
-    const citiesCol = collection(db, 'cities');
-    const citySnapshot = await getDocs(citiesCol);
-    const cityList = citySnapshot.docs.map(doc => doc.data());
-    console.log(cityList);
-  }
-
+  //send data to firestore
   async function setData() {
-    // Add a new document in collection "cities"
     await setDoc(doc(db, 'cities', email), {
       city_name: cityName,
       state: stateName,
     });
+  }
+  //get data from firestore
+  async function getData() {
+    const citiesCol = collection(db, 'cities');
+    const citySnapshot = await getDocs(citiesCol);
+    const cityList = citySnapshot.docs.map(doc => doc.data());
+    const myJSON = JSON.stringify(cityList); //object to string
+    setUserDetails(cityList);
+  }
 
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // console.log(userDetails)
+
+  function renderView(itemData) {
+    return (
+      <ScrollView>
+        <View style={styles.renderview}>
+          <Text style={styles.renderText}>
+            {itemData.item.city_name.toUpperCase()},
+          </Text>
+          <Text style={styles.addresstext}>
+            {itemData.item.state.toUpperCase()}
+          </Text>
+        </View>
+      </ScrollView>
+    );
   }
 
   return (
     <View style={styles.firestoreView}>
-      <Button title="Get data" onPress={getData} color="black" />
       <View style={styles.inputView}>
         <TextInput
-          placeholder="City name"
+          style={styles.textinput}
+          placeholder="Name"
           onChangeText={text => setCityName(text)}
         />
         <TextInput
-          placeholder="State"
+          style={styles.textinput}
+          placeholder="Address"
           onChangeText={text => setStateName(text)}
         />
-        <TextInput placeholder="Email" onChangeText={text => setEmail(text)} />
+        <TextInput
+          style={styles.textinput}
+          placeholder="Email"
+          onChangeText={text => setEmail(text)}
+        />
       </View>
-      <Button title="set data" onPress={setData} color="#556b2f" />
+      <View style={styles.buttonview}>
+        <TouchableOpacity style={styles.setButton} onPress={setData}>
+          <Text style={styles.buttontext}>SetData</Text>
+        </TouchableOpacity>
+        <View style={styles.listview}>
+          <FlatList
+            data={userDetails}
+            renderItem={itemData => renderView(itemData)}
+          />
+        </View>
+      </View>
     </View>
-    // <View style={styles.container}>
-    //   <TextInput
-    //     placeholder="username"
-    //     value={email}
-    //     onChangeText={text => {
-    //       setEmail(text);
-    //     }}
-    //   />
-
-    //   <TextInput
-    //     placeholder="password"
-    //     value={password}
-    //     onChangeText={text => {
-    //       setPassword(text);
-    //     }}
-    //   />
-    //   <Button title="register" onPress={registerUser} />
-    //   <View style={styles.underview}>
-    //     <TextInput
-    //       placeholder="username"
-    //       value={signInEmail}
-    //       onChangeText={text => {
-    //         setSignInEmail(text);
-    //       }}
-    //     />
-
-    //     <TextInput
-    //       placeholder="password"
-    //       value={signInPassword}
-    //       onChangeText={text => {
-    //         setSignInPassword(text);
-    //       }}
-    //     />
-    //     {isSignedIn ?
-    //     <Button title="sign out" onPress={signOutUser} />
-    //     :
-    //     <Button title="sign in" onPress={signInUser} />
-    //     }
-    //   </View>
-    //   <View style={styles.thirdview} >
-    //   </View>
-    // </View>
   );
 };
 
 export default App;
 
 const styles = StyleSheet.create({
-  // container: {
-  //   padding: 20,
-  //   flex: 1,
-  // },
-  // underview: {
-  //   marginVertical: 25,
-  // },
-  // thirdview:{
-  //   backgroundColor:"cyan",
-  //   flex:1
-  // }
-
   firestoreView: {
-    padding: 30,
+    padding: 20,
     flex: 1,
-    backgroundColor: '#f0e68c',
+    backgroundColor: '#dcdcdc',
   },
   inputView: {
     padding: 10,
+    marginHorizontal: 10,
+  },
+  buttonview: {
+    padding: 10,
+    marginHorizontal: 10,
+  },
+  textinput: {
+    padding: 10,
+    backgroundColor: 'white',
+    marginVertical: 10,
+    paddingLeft: 20,
+    borderRadius: 30,
+  },
+  setButton: {
+    backgroundColor: 'green',
+    padding: 8,
+    borderRadius: 30,
+    marginVertical: 10,
+  },
+  getButton: {
+    backgroundColor: 'red',
+    padding: 8,
+    borderRadius: 30,
+    marginVertical: 10,
+  },
+  buttontext: {
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  scrollview: {
+    backgroundColor: 'cyan',
+  },
+  renderview: {
+    backgroundColor: 'white',
+    marginVertical: 10,
+    padding: 10,
+    borderRadius: 30,
+  },
+  renderText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  listview: {
+    height: '65%',
+    marginVertical: 30,
+    width: '100%',
+    backgroundColor: 'gray',
+    padding: 10,
+    borderRadius: 30,
+    elevation:5
+  },
+  addresstext: {
+    textAlign: 'center',
   },
 });
