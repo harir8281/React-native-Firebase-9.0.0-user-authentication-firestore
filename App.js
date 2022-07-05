@@ -1,5 +1,7 @@
 import {StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native';
 import React, {useState} from 'react';
+
+
 import {authentication} from './Firebase/firebase-config';
 import {
   getAuth,
